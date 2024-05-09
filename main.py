@@ -1,9 +1,14 @@
 import streamlit as st
+import pandas as pd
 from datetime import datetime
 
 
 def main():
     st.title("Aplikasi Pencatatan Pengeluaran Harian")
+
+    # Membuat dataframe kosong untuk menyimpan data pengeluaran
+    if "data" not in st.session_state:
+        st.session_state.data = pd.DataFrame(columns=["Tanggal", "Deskripsi", "Jumlah"])
 
     # Tampilkan form untuk input pengeluaran
     st.subheader("Input Pengeluaran")
@@ -18,26 +23,26 @@ def main():
         file_name = (
             f"pengeluaran_{tanggal.day}_{tanggal.strftime('%B')}_{tanggal.year}.txt"
         )
+        st.session_state.data = st.session_state.data.append(
+            {"Tanggal": tanggal, "Deskripsi": deskripsi, "Jumlah": jumlah},
+            ignore_index=True,
+        )
 
-        with open(file_name, "a") as file:
-            file.write(f"Tanggal\tDeskripsi\tJumlah\n")
-            file.write(f"{tanggal}\t{deskripsi}\t{jumlah}\n")
+        # Menetapkan format untuk kolom Jumlah
+        st.session_state.data["Jumlah"] = st.session_state.data["Jumlah"].map(
+            "${:,.2f}".format
+        )
+
+        # Menyimpan dataframe ke file CSV
+        st.session_state.data.to_csv(file_name, index=False, sep="\t")
 
         st.success(f"Data berhasil disimpan ke dalam file {file_name}.")
 
-        # Hitung total pengeluaran
-        total_pengeluaran = jumlah
-
-        with open(file_name, "r") as file:
-            lines = file.readlines()
-            for line in lines[1:]:
-                parts = line.split("\t")
-                if len(parts) == 3 and parts[2].isdigit():
-                    total_pengeluaran += int(parts[2])
-
+        # Tambahkan total pengeluaran di akhir file
+        total_pengeluaran = st.session_state.data["Jumlah"].sum()
         with open(file_name, "a") as file:
-            file.write("--------------------------------+\n")
-            file.write(f"Total Pengeluaran:\t{total_pengeluaran}\n")
+            file.write("\n--------------------------------+\n")
+            file.write(f"Total Pengeluaran: {total_pengeluaran}\n")
 
         # Tampilkan tombol unduh
         st.download_button(
@@ -49,22 +54,12 @@ def main():
 
     # Menampilkan pengeluaran yang sudah disimpan
     st.subheader("Data Pengeluaran")
-    st.write("Tanggal\tDeskripsi\tJumlah\n")
-    st.write("---\t---\t---")
+    st.write(st.session_state.data)
 
     # Menampilkan total pengeluaran
-    total_pengeluaran = 0
-
-    with open(file_name, "r") as file:
-        lines = file.readlines()
-        for line in lines[1:]:
-            parts = line.split("\t")
-            if len(parts) == 3 and parts[2].isdigit():
-                st.write(f"{parts[0]}\t{parts[1]}\t{parts[2]}")
-                total_pengeluaran += int(parts[2])
-
-    st.write("--------------------------------+\n")
-    st.write(f"Total Pengeluaran:\t{total_pengeluaran}")
+    total_pengeluaran = st.session_state.data["Jumlah"].sum()
+    st.subheader("Total Pengeluaran")
+    st.write(total_pengeluaran)
 
 
 if __name__ == "__main__":

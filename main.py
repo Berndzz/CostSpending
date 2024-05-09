@@ -16,7 +16,7 @@ def main():
     deskripsi = st.text_input("Deskripsi")
     # Menggunakan widget text_input untuk memasukkan jumlah dalam format uang Rupiah
     jumlah_input = st.text_input("Jumlah (dalam ribuan)", value="0")
-    jumlah = int(jumlah_input.replace(".", ""))
+    jumlah = float(jumlah_input.replace(".", "").replace(",", ""))
 
     # Tombol untuk menyimpan pengeluaran dan menampilkan tautan unduh
     if st.button("Simpan dan Unduh"):
@@ -28,11 +28,6 @@ def main():
             ignore_index=True,
         )
 
-        # Menetapkan format untuk kolom Jumlah
-        st.session_state.data["Jumlah"] = st.session_state.data["Jumlah"].map(
-            "Rp{:,.2f}".format
-        )
-
         # Menyimpan dataframe ke file CSV
         st.session_state.data.to_csv(file_name, index=False, sep="\t")
 
@@ -42,7 +37,7 @@ def main():
         total_pengeluaran = st.session_state.data["Jumlah"].sum()
         with open(file_name, "a") as file:
             file.write("\n--------------------------------+\n")
-            file.write(f"Total Pengeluaran: Rp{total_pengeluaran:,.2f}\n")
+            file.write(f"Total Pengeluaran: Rp {total_pengeluaran:,.2f}\n")
 
         # Tampilkan tombol unduh
         st.download_button(
@@ -59,7 +54,7 @@ def main():
     # Menampilkan total pengeluaran
     total_pengeluaran = st.session_state.data["Jumlah"].sum()
     st.subheader("Total Pengeluaran")
-    st.write(f"Rp{total_pengeluaran:,.2f}")
+    st.write(f"Rp {total_pengeluaran:,.2f}")
 
 
 if __name__ == "__main__":

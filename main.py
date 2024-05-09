@@ -29,11 +29,20 @@ def main():
     st.subheader("Data Pengeluaran")
     st.write(st.session_state.data)
 
+    # Tampilkan total pengeluaran
+    total_pengeluaran = sum(st.session_state.data["Jumlah"].astype(int))
+    st.subheader("Total Pengeluaran")
+    st.write(f"Total Pengeluaran: Rp {total_pengeluaran:,.2f}")
+
     # Tampilkan tombol unduh
     file_name = f"pengeluaran_{tanggal.day}_{tanggal.strftime('%B')}_{tanggal.year}.txt"
+    file_content = (
+        st.session_state.data.to_csv(index=False, sep="\t")
+        + f"\nTotal Pengeluaran: Rp {total_pengeluaran:,.2f}"
+    )
     st.download_button(
         label=f"Download File {file_name}",
-        data=st.session_state.data.to_csv(index=False, sep="\t"),
+        data=file_content,
         file_name=file_name,
         mime="text/plain",
     )

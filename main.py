@@ -25,6 +25,19 @@ def main():
 
         st.success(f"Data berhasil disimpan ke dalam file {file_name}.")
 
+        # Hitung total pengeluaran
+        total_pengeluaran = jumlah
+
+        with open(file_name, "r") as file:
+            lines = file.readlines()
+            for line in lines[1:]:
+                parts = line.split("\t")
+                total_pengeluaran += int(parts[2])
+
+        with open(file_name, "a") as file:
+            file.write("--------------------------------+\n")
+            file.write(f"Total Pengeluaran:\t{total_pengeluaran}\n")
+
         # Tampilkan tombol unduh
         st.download_button(
             label=f"Download File {file_name}",
@@ -32,6 +45,24 @@ def main():
             file_name=file_name,
             mime="text/plain",
         )
+
+    # Menampilkan pengeluaran yang sudah disimpan
+    st.subheader("Data Pengeluaran")
+    st.write("Tanggal\tDeskripsi\tJumlah\n")
+    st.write("---\t---\t---")
+
+    # Menampilkan total pengeluaran
+    total_pengeluaran = 0
+
+    with open(file_name, "r") as file:
+        lines = file.readlines()
+        for line in lines[1:]:
+            parts = line.split("\t")
+            st.write(f"{parts[0]}\t{parts[1]}\t{parts[2]}")
+            total_pengeluaran += int(parts[2])
+
+    st.write("--------------------------------+\n")
+    st.write(f"Total Pengeluaran:\t{total_pengeluaran}")
 
 
 if __name__ == "__main__":

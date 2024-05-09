@@ -16,7 +16,7 @@ def main():
     deskripsi = st.text_input("Deskripsi")
     # Menggunakan widget text_input untuk memasukkan jumlah dalam format uang Rupiah
     jumlah_input = st.text_input("Jumlah (dalam ribuan)", value="0")
-    jumlah = float(jumlah_input.replace(".", "").replace(",", ""))
+    jumlah = jumlah_input.replace(".", "").replace(",", "")
 
     # Tombol untuk menyimpan pengeluaran dan menampilkan tautan unduh
     if st.button("Simpan dan Tampilkan"):

@@ -1,5 +1,0 @@
-Tanggal	Deskripsi	Jumlah
-2024-05-09	rs	10000.0
-
---------------------------------+
-Total Pengeluaran: Rp 10,000.00

@@ -30,7 +30,7 @@ def main():
 
         # Menetapkan format untuk kolom Jumlah
         st.session_state.data["Jumlah"] = st.session_state.data["Jumlah"].map(
-            "${:,.2f}".format
+            "Rp{:,.2f}".format
         )
 
         # Menyimpan dataframe ke file CSV
@@ -42,7 +42,7 @@ def main():
         total_pengeluaran = st.session_state.data["Jumlah"].sum()
         with open(file_name, "a") as file:
             file.write("\n--------------------------------+\n")
-            file.write(f"Total Pengeluaran: {total_pengeluaran}\n")
+            file.write(f"Total Pengeluaran: Rp{total_pengeluaran:,.2f}\n")
 
         # Tampilkan tombol unduh
         st.download_button(
@@ -59,7 +59,7 @@ def main():
     # Menampilkan total pengeluaran
     total_pengeluaran = st.session_state.data["Jumlah"].sum()
     st.subheader("Total Pengeluaran")
-    st.write(total_pengeluaran)
+    st.write(f"Rp{total_pengeluaran:,.2f}")
 
 
 if __name__ == "__main__":

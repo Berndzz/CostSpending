@@ -1,0 +1,5 @@
+Tanggal	Deskripsi	Jumlah
+2024-05-09	test	$10,000.00
+
+--------------------------------+
+Total Pengeluaran: $10,000.00

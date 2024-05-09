@@ -32,7 +32,8 @@ def main():
             lines = file.readlines()
             for line in lines[1:]:
                 parts = line.split("\t")
-                total_pengeluaran += int(parts[2])
+                if len(parts) == 3 and parts[2].isdigit():
+                    total_pengeluaran += int(parts[2])
 
         with open(file_name, "a") as file:
             file.write("--------------------------------+\n")
@@ -58,8 +59,9 @@ def main():
         lines = file.readlines()
         for line in lines[1:]:
             parts = line.split("\t")
-            st.write(f"{parts[0]}\t{parts[1]}\t{parts[2]}")
-            total_pengeluaran += int(parts[2])
+            if len(parts) == 3 and parts[2].isdigit():
+                st.write(f"{parts[0]}\t{parts[1]}\t{parts[2]}")
+                total_pengeluaran += int(parts[2])
 
     st.write("--------------------------------+\n")
     st.write(f"Total Pengeluaran:\t{total_pengeluaran}")

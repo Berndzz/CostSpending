@@ -27,7 +27,15 @@ def main():
             {"Tanggal": tanggal, "Deskripsi": deskripsi, "Jumlah": jumlah},
             ignore_index=True,
         )
+
+        # Menetapkan format untuk kolom Jumlah
+        st.session_state.data["Jumlah"] = st.session_state.data["Jumlah"].map(
+            "${:,.2f}".format
+        )
+
+        # Menyimpan dataframe ke file CSV
         st.session_state.data.to_csv(file_name, index=False, sep="\t")
+
         st.success(f"Data berhasil disimpan ke dalam file {file_name}.")
 
         # Tambahkan total pengeluaran di akhir file

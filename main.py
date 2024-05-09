@@ -1,14 +1,9 @@
 import streamlit as st
-import pandas as pd
 from datetime import datetime
 
 
 def main():
     st.title("Aplikasi Pencatatan Pengeluaran Harian")
-
-    # Membuat dataframe kosong untuk menyimpan data pengeluaran
-    if "data" not in st.session_state:
-        st.session_state.data = pd.DataFrame(columns=["Tanggal", "Deskripsi", "Jumlah"])
 
     # Tampilkan form untuk input pengeluaran
     st.subheader("Input Pengeluaran")
@@ -23,26 +18,12 @@ def main():
         file_name = (
             f"pengeluaran_{tanggal.day}_{tanggal.strftime('%B')}_{tanggal.year}.txt"
         )
-        st.session_state.data = st.session_state.data.append(
-            {"Tanggal": tanggal, "Deskripsi": deskripsi, "Jumlah": jumlah},
-            ignore_index=True,
-        )
 
-        # Menetapkan format untuk kolom Jumlah
-        st.session_state.data["Jumlah"] = st.session_state.data["Jumlah"].map(
-            "${:,.2f}".format
-        )
-
-        # Menyimpan dataframe ke file CSV
-        st.session_state.data.to_csv(file_name, index=False, sep="\t")
+        with open(file_name, "a") as file:
+            file.write(f"Tanggal\tDeskripsi\tJumlah\n")
+            file.write(f"{tanggal}\t{deskripsi}\t{jumlah}\n")
 
         st.success(f"Data berhasil disimpan ke dalam file {file_name}.")
-
-        # Tambahkan total pengeluaran di akhir file
-        total_pengeluaran = st.session_state.data["Jumlah"].sum()
-        with open(file_name, "a") as file:
-            file.write("\n--------------------------------+\n")
-            file.write(f"Total Pengeluaran: {total_pengeluaran}\n")
 
         # Tampilkan tombol unduh
         st.download_button(
@@ -51,15 +32,6 @@ def main():
             file_name=file_name,
             mime="text/plain",
         )
-
-    # Menampilkan pengeluaran yang sudah disimpan
-    st.subheader("Data Pengeluaran")
-    st.write(st.session_state.data)
-
-    # Menampilkan total pengeluaran
-    total_pengeluaran = st.session_state.data["Jumlah"].sum()
-    st.subheader("Total Pengeluaran")
-    st.write(total_pengeluaran)
 
 
 if __name__ == "__main__":

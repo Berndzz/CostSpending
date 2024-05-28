@@ -25,7 +25,7 @@ def main():
             ignore_index=True,
         )
 
-    # Menampilkan pengeluaran yang sudah disimpan
+    # Menampilkan pengeluaran yg sudah disimpan
     st.subheader("Data Pengeluaran")
     st.write(st.session_state.data)
 
